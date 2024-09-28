@@ -1,5 +1,6 @@
 package com.example.fomonator
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,17 @@ class NotificationAdapter(private val notifications: List<FomoNotificationWithUr
         holder.appName.text = notification.notification.app.name
         holder.title.text = notification.notification.sender
         holder.content.text = notification.notification.msg
+        if (notification.cancelled) {
+            val concelledNotificatioColor = "#A0A0A0"
+            holder.appName.setTextColor(Color.parseColor(concelledNotificatioColor))
+            holder.title.setTextColor(Color.parseColor(concelledNotificatioColor))
+            holder.content.setTextColor(Color.parseColor(concelledNotificatioColor))
+        } else {
+            val activeNotification = "#000000"
+            holder.appName.setTextColor(Color.parseColor(activeNotification))
+            holder.title.setTextColor(Color.parseColor(activeNotification))
+            holder.content.setTextColor(Color.parseColor(activeNotification))
+        }
 
         // Adjust the width of the urgency bar based on the urgency (0-10 scale)
         val urgencyPercentage: Double = (notification.urgency?:5) / 10.0
