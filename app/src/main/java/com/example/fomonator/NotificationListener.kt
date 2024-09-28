@@ -20,9 +20,10 @@ class NotificationListener : NotificationListenerService() {
         val fomoNotification = FomoNotification(mapToApp(sbn.packageName), notificationTitle, notificationText, sbn.postTime)
 
         Log.d("NotificationListener", "Notification Posted: $fomoNotification")
-        val urgency = llmClassifier.urgencify(fomoNotification)
+        val allRelatedNotifications = NotificationRepository.insertNotification(fomoNotification)
+        Log.d("NotificationListener", "Found ${allRelatedNotifications.size} related notifications")
+        val urgency = llmClassifier.urgencify(allRelatedNotifications)
         val fomoNotificationWithUrgency = FomoNotificationWithUrgency(fomoNotification, urgency)
-
 
         if (urgency <=5 ) {
             cancelNotification(sbn.key)
@@ -48,8 +49,16 @@ enum class FomoApp { MESSENGER, OTHER }
 data class FomoNotification(val app: FomoApp, val sender: String?, val msg: String?, val postTime: Long)
 data class FomoNotificationWithUrgency(val notification: FomoNotification, val urgency: Int, )
 
-//class NotificationRepository {
-//    fun insertNotification(fomoNotification: FomoNotification) {}
-//    fun
-//
-//}
+data class FomoGrouping(val app: FomoApp, val sender: String)
+object NotificationRepository {
+    val notifications = mutableListOf<FomoNotification>()
+
+    fun insertNotification(fomoNotification: FomoNotification): List<FomoNotification> {
+        notifications.add(fomoNotification)
+
+        return notifications.groupBy { it.app to it.sender }
+            .get(fomoNotification.app to fomoNotification.sender)
+            ?: emptyList()
+    }
+
+}
