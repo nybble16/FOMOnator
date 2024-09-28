@@ -21,5 +21,6 @@ class NotificationListener : NotificationListenerService() {
         intent.putExtra("notification_title", notificationTitle)
         intent.putExtra("notification_text", notificationText)
         sendBroadcast(intent)
+        cancelNotification(sbn.key)
     }
 }
