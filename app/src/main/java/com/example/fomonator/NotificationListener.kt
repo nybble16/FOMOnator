@@ -28,8 +28,8 @@ class NotificationListener : NotificationListenerService() {
 
         serviceScope.launch {
             //TODO change to list
-//        val urgency = llmClassifier.urgencify(allRelatedNotifications)
-            val urgency = llmClassifier.urgencify(fomoNotification)
+            val urgency = llmClassifier.urgencify(allRelatedNotifications)
+//            val urgency = llmClassifier.urgencify(fomoNotification)
 
             val fomoNotificationWithUrgency = FomoNotificationWithUrgency(fomoNotification, urgency)
 

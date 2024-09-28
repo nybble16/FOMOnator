@@ -16,17 +16,18 @@ object LLamaClient {
     // This is a suspend function that can be called from a coroutine
     suspend fun ask(msg: String): String? {
         val jsonPayload = JSONObject()
-            .put("model", "llama3.2:1b")
+            .put("model", "llama3.2:3b")
             .put("prompt", msg)
             .put("stream", false)
+            .put("options", JSONObject().put("temperature", 0))
 
         return withContext(Dispatchers.IO) {
             Log.d("LLamaClient", "Sending request to $BASE_URL")
             val (request, response, result) = Fuel.post(BASE_URL)
                 .header("Content-Type", "application/json")
                 .body(jsonPayload.toString())
-                .timeout(30_000)
-                .timeoutRead(30_000)
+                .timeout(60_000)
+                .timeoutRead(60_000)
                 .responseString()
 
             handleResponse(response, result)
