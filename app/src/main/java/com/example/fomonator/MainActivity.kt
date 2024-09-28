@@ -10,11 +10,12 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
-    private val notificationList = mutableListOf<String>()
+    private val notificationList = mutableListOf<FomoNotificationWithUrgency>()
     private lateinit var adapter: NotificationAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,12 +39,11 @@ class MainActivity : AppCompatActivity() {
 
     private val notificationReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val title = intent?.getStringExtra("notification_title")
-            val text = intent?.getStringExtra("notification_text")
+            val allData = intent?.getStringExtra("fomoNotification")
 
-            if (title != null && text != null) {
-                val notificationDetails = "$title: $text"
-                notificationList.add(0, notificationDetails)
+            if (allData != null) {
+                val notificationDetails = "$allData"
+                notificationList.add(0, Gson().fromJson(allData, FomoNotificationWithUrgency::class.java))
                 adapter.notifyDataSetChanged()
             }
         }
