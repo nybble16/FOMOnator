@@ -23,7 +23,8 @@ class NotificationAdapter(private val notifications: List<FomoNotificationWithUr
         holder.content.text = notification.notification.msg
 
         // Adjust the width of the urgency bar based on the urgency (0-10 scale)
-        val urgencyPercentage: Double = notification.urgency / 10.0
+        val urgencyPercentage: Double = (notification.urgency?:5) / 10.0
+        //TODO co robic jak nie wiadomo jakie urgency - teraz default 5
 
         holder.urgencyBar.post {
             val maxWidth = holder.urgencyBar.parent as ViewGroup

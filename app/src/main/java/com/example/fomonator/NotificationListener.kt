@@ -5,11 +5,14 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
 import com.google.gson.Gson
-import kotlin.random.Random
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class NotificationListener : NotificationListenerService() {
 
-    val llmClassifier = MockLLMClassifier()
+    val llmClassifier: LLMClassifier = LLamaClassifier()
+    private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         super.onNotificationPosted(sbn)
@@ -22,21 +25,28 @@ class NotificationListener : NotificationListenerService() {
         Log.d("NotificationListener", "Notification Posted: $fomoNotification")
         val allRelatedNotifications = NotificationRepository.insertNotification(fomoNotification)
         Log.d("NotificationListener", "Found ${allRelatedNotifications.size} related notifications")
-        val urgency = llmClassifier.urgencify(allRelatedNotifications)
-        val fomoNotificationWithUrgency = FomoNotificationWithUrgency(fomoNotification, urgency)
 
-        if (urgency <=5 ) {
-            cancelNotification(sbn.key)
-            Log.d("NotificationListener", "Cancelling Notification Key: ${sbn.key}")
+        serviceScope.launch {
+            //TODO change to list
+//        val urgency = llmClassifier.urgencify(allRelatedNotifications)
+            val urgency = llmClassifier.urgencify(fomoNotification)
+
+            val fomoNotificationWithUrgency = FomoNotificationWithUrgency(fomoNotification, urgency)
+
+            if (urgency != null && urgency <= 5) {
+                cancelNotification(sbn.key)
+                Log.d("NotificationListener", "Cancelling Notification Key: ${sbn.key}")
+            } else Log.d(
+                "NotificationListener",
+                "Passing Notification: ${fomoNotificationWithUrgency}"
+            )
+
+            val intent = Intent("com.example.fomonator.NOTIFICATION_LISTENER")
+            intent.putExtra("notification_title", notificationTitle)
+            intent.putExtra("notification_text", notificationText)
+            intent.putExtra("fomoNotification", Gson().toJson(fomoNotificationWithUrgency))
+            sendBroadcast(intent)
         }
-        else Log.d("NotificationListener", "Passing Notification: ${fomoNotificationWithUrgency}")
-
-        val intent = Intent("com.example.fomonator.NOTIFICATION_LISTENER")
-        intent.putExtra("notification_title", notificationTitle)
-        intent.putExtra("notification_text", notificationText)
-        intent.putExtra("fomoNotification", Gson().toJson(fomoNotificationWithUrgency))
-        sendBroadcast(intent)
-
     }
 }
 
@@ -47,7 +57,7 @@ fun mapToApp(packageName: String): FomoApp = when (packageName) {
 
 enum class FomoApp { MESSENGER, OTHER }
 data class FomoNotification(val app: FomoApp, val sender: String?, val msg: String?, val postTime: Long)
-data class FomoNotificationWithUrgency(val notification: FomoNotification, val urgency: Int, )
+data class FomoNotificationWithUrgency(val notification: FomoNotification, val urgency: Int?)
 
 data class FomoGrouping(val app: FomoApp, val sender: String)
 object NotificationRepository {
