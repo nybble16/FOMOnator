@@ -1,5 +1,6 @@
 package com.example.fomonator
 
+import kotlin.math.absoluteValue
 import kotlin.random.Random
 
 interface LLMClassifier {
@@ -9,6 +10,6 @@ interface LLMClassifier {
 
 class MockLLMClassifier : LLMClassifier {
     override fun urgencify(fomoNotification: FomoNotification): Int {
-        return Random.nextInt() % 10
+        return Random.nextInt().absoluteValue % 10
     }
 }

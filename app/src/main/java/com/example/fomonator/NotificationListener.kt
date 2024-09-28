@@ -22,10 +22,13 @@ class NotificationListener : NotificationListenerService() {
         Log.d("NotificationListener", "Notification Posted: $fomoNotification")
         val urgency = llmClassifier.urgencify(fomoNotification)
         val fomoNotificationWithUrgency = FomoNotificationWithUrgency(fomoNotification, urgency)
-        Log.d("NotificationListener", "Notification Classified: $fomoNotificationWithUrgency")
 
-        if (urgency > 5)
+
+        if (urgency <=5 ) {
             cancelNotification(sbn.key)
+            Log.d("NotificationListener", "Cancelling Notification Key: ${sbn.key}")
+        }
+        else Log.d("NotificationListener", "Passing Notification: ${fomoNotificationWithUrgency}")
 
         val intent = Intent("com.example.fomonator.NOTIFICATION_LISTENER")
         intent.putExtra("notification_title", notificationTitle)
