@@ -27,8 +27,8 @@ class NotificationListener : NotificationListenerService() {
         Log.d("NotificationListener", "Found ${allRelatedNotifications.size} related notifications")
 
         serviceScope.launch {
-            val urgency = llmClassifier.urgencify(allRelatedNotifications) ?: 0
-//            val urgency = llmClassifier.urgencify(fomoNotification)
+//            val urgency = llmClassifier.urgencify(allRelatedNotifications) ?: 0
+            val urgency = 5
 
             val fomoNotificationWithUrgency = FomoNotificationWithUrgency(fomoNotification, urgency, urgency <= 5)
 

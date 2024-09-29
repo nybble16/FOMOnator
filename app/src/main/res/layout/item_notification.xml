@@ -5,49 +5,87 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
-    <!-- Urgency Bar (background) -->
-    <View
-        android:id="@+id/urgencyBar"
-        android:layout_width="100dp"
-        android:layout_height="0dp"
+    <!-- Avatar Image -->
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="0dp"
-        android:background="#D3D3D3"
+        android:layout_marginRight="4dp"
+        android:contentDescription="Avatar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
-<!--        app:layout_constraintEnd_toEndOf="parent" />-->
 
-    <!-- App Name -->
+    <!-- Sender (Title) -->
+
+    <!-- Time Sent -->
     <TextView
-        android:id="@+id/appName"
+        android:id="@+id/sender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="App Name"
+        android:layout_marginEnd="8dp"
+        android:text="Sender Name"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/content"
+        app:layout_constraintHorizontal_bias="0.019"
+        app:layout_constraintStart_toEndOf="@+id/avatar"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Notification Title -->
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Title"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appName" />
 
     <!-- Notification Content -->
     <TextView
-        android:id="@+id/content"
+        android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Content"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="0dp"
+        android:text=" · 2m ago"
+        android:textColor="#808080"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        app:layout_constraintTop_toTopOf="@+id/sender"
+        app:layout_constraintLeft_toRightOf="@+id/sender" />
+
+    <TextView
+        android:id="@+id/urgency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="30dp"
+        android:text="90%"
+        android:textColor="#808080"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/time" />
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Message content goes here"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/avatar"
+        app:layout_constraintTop_toBottomOf="@+id/sender"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/urgencyScore" />
+
+<!--    &lt;!&ndash; Urgency Score Badge (Percentage) &ndash;&gt;-->
+<!--    <TextView-->
+<!--        android:id="@+id/urgencyScore"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="75%"-->
+<!--        android:background="@drawable/score_background"-->
+<!--        android:padding="4dp"-->
+<!--        android:textSize="12sp"-->
+<!--        android:textColor="#FFFFFF"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:layout_marginEnd="8dp" />-->
+
+    <!-- Static Notification Icon -->
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
