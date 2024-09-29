@@ -1,5 +1,6 @@
 package com.example.fomonator
 
+import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import java.time.Duration
@@ -21,15 +23,22 @@ class NotificationAdapter(private val notifications: List<FomoNotificationWithUr
         return ViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val notification = notifications[position]
         holder.title.text = notification.notification.sender
         holder.content.text = notification.notification.msg
         holder.avatar.setImageResource(R.drawable.messenger)
 
+        if (notification.cancelled) {
+            holder.card.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
+        } else {
+            holder.card.setCardBackgroundColor(Color.parseColor("#E2CFFA"))
+        }
+
         val timeAgo = getTimeDifference(notification.notification.postTime)
         holder.timeAgo.text = " · $timeAgo"
-        holder.urgency.text = "${notification.urgency}%"
+        holder.urgency.text = "${(notification.urgency?:0) * 10}%"
     }
 
     override fun getItemCount() = notifications.size
@@ -40,6 +49,7 @@ class NotificationAdapter(private val notifications: List<FomoNotificationWithUr
         val title: TextView = view.findViewById(R.id.sender)
         val urgency: TextView = view.findViewById(R.id.urgency)
         val content: TextView = view.findViewById(R.id.content)
+        val card: CardView = view.findViewById(R.id.card)
     }
 
     fun formatDuration(duration: Duration): String {

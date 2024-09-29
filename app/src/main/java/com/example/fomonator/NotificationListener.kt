@@ -27,13 +27,14 @@ class NotificationListener : NotificationListenerService() {
         Log.d("NotificationListener", "Found ${allRelatedNotifications.size} related notifications")
 
         serviceScope.launch {
-//            val urgency = llmClassifier.urgencify(allRelatedNotifications) ?: 0
-            val urgency = 5
+            val urgency = llmClassifier.urgencify(allRelatedNotifications) ?: 0
+//            val urgency = 5
 
             val fomoNotificationWithUrgency = FomoNotificationWithUrgency(fomoNotification, urgency, urgency <= 5)
 
+            cancelNotification(sbn.key)
             if (fomoNotificationWithUrgency.cancelled) {
-                cancelNotification(sbn.key)
+//                cancelNotification(sbn.key)
                 Log.d("NotificationListener", "Cancelling Notification Key: ${sbn.key}")
             } else Log.d(
                 "NotificationListener",
